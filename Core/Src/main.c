@@ -21,6 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "sit1021_lin.h"
 
 /* USER CODE END Includes */
 
@@ -80,6 +81,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  SIT1021_Init(&huart1);
 
   /* USER CODE END Init */
 
