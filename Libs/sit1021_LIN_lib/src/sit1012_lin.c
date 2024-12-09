@@ -121,6 +121,40 @@ LIN_ERR_t SIT1021_ReceiveData(LIN_FRAME_t *frame, UART_HandleTypeDef *huart) {
     return LIN_OK;
 }
 
+LIN_ERR_t SIT1021_ReceiveData(LIN_FRAME_t *frame, UART_HandleTypeDef *huart) {
+    uint8_t checksum = 0;
+    uint8_t n = 0;
+    uint8_t rx_data = 0;
+
+    // Receive Sync Field
+    uint8_t sync_byte;
+    HAL_UART_Receive(huart, &sync_byte, 1, HAL_MAX_DELAY);
+    if (sync_byte != LIN_SYNC_DATA) {
+        return LIN_SYNC_ERROR;
+    }
+
+    // Receive PID
+    uint8_t pid;
+    HAL_UART_Receive(huart, &pid, 1, HAL_MAX_DELAY);
+    frame->id = pid & 0x3F;
+
+    // Receive Data
+    for (n = 0; n < frame->data_len; n++) {
+        HAL_UART_Receive(huart, &frame->data[n], 1, HAL_MAX_DELAY);
+    }
+
+    // Receive Checksum
+    HAL_UART_Receive(huart, &checksum, 1, HAL_MAX_DELAY);
+
+    // Verify Checksum
+    if (checksum != p_LIN_makeChecksum(frame)) {
+        return LIN_CHECKSUM_ERROR;
+    }
+
+    return LIN_OK;
+}
+
+
 uint8_t p_LIN_makeChecksum(LIN_FRAME_t *frame) {
     uint8_t ret_wert = 0;
     uint8_t n = 0;

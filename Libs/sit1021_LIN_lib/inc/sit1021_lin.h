@@ -135,6 +135,7 @@ typedef enum {
 void SIT1021_Init(UART_HandleTypeDef *huart);
 LIN_ERR_t SIT1021_SendData(LIN_FRAME_t *frame, UART_HandleTypeDef *huart);
 LIN_ERR_t SIT1021_ReceiveData(LIN_FRAME_t *frame, UART_HandleTypeDef *huart);
+LIN_ERR_t SIT1021_ReceiveData(LIN_FRAME_t *frame, UART_HandleTypeDef *huart);
 uint8_t p_LIN_makeChecksum(LIN_FRAME_t *frame);
 
 #ifdef __cplusplus
